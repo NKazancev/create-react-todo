@@ -1,0 +1,78 @@
+.list-container {
+  padding: 35px 0 45px 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  row-gap: 30px;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  column-gap: 25px;
+
+  &__item {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  &__item.completed .task__label {
+    text-decoration: line-through;
+    color: hsl(0, 0%, 50%);
+  }
+
+  &__checkbox {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background-color: hsl(189, 3%, 58%);
+    border: 1px solid hsl(190, 3%, 45%);
+    cursor: pointer;
+
+    flex-shrink: 0;
+    position: relative;
+
+    &:checked:before {
+      content: url(./assets/check.svg);
+      position: absolute;
+      top: 0px;
+      left: 1px;
+    }
+  }
+
+  &__label {
+    max-width: 346px;
+    padding-left: 15px;
+    color: hsl(0, 0%, 77%);
+    font-size: 16px;
+    flex-grow: 1;
+    cursor: pointer;
+  }
+
+  &__form {
+    flex-grow: 1;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 5px 10px;
+    color: inherit;
+    background-color: hsl(189, 3%, 58%);
+    border-radius: 5px;
+    font-size: 16px;
+  }
+
+  &__date {
+    text-align: right;
+    color: hsl(0, 0%, 60%);
+    font-size: 11px;
+  }
+
+  &__button {
+    background: transparent;
+    flex-shrink: 0;
+  }
+}

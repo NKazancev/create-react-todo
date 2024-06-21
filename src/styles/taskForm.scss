@@ -1,0 +1,33 @@
+.title {
+  font-size: 32px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 33px;
+}
+
+.form {
+  display: flex;
+  column-gap: 10px;
+
+  &__button {
+    padding: 16px 28px 17px 29px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  &__input {
+    padding: 0 15px;
+    background-color: hsl(189, 3%, 58%);
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    font-size: 16px;
+
+    flex-grow: 1;
+
+    &::placeholder {
+      color: hsl(0, 0%, 78%);
+      font-size: 15px;
+      font-weight: 200;
+    }
+  }
+}

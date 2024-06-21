@@ -1,0 +1,32 @@
+.tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__stat {
+    color: hsl(0, 0%, 80%);
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.4;
+    display: block;
+  }
+
+  &__filters {
+    display: flex;
+    column-gap: 9px;
+  }
+
+  &__button {
+    padding: 13px 23px;
+    border-radius: 5px;
+    white-space: nowrap;
+  }
+}
+
+.button-clear {
+  background-color: hsl(190, 50%, 50%);
+
+  &:hover {
+    background-color: hsl(190, 63%, 56%);
+  }
+}

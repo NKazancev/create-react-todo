@@ -1,0 +1,31 @@
+html {
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+input,
+button {
+  border: none;
+  outline: transparent;
+  font-family: inherit;
+  color: inherit;
+}
+
+p,
+span {
+  user-select: none;
+}
