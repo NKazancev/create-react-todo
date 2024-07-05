@@ -10,14 +10,22 @@ export default class App extends Component {
     filter: 'all',
   };
 
-  addTask = (text) => {
+  addTask = (text, time) => {
     if (text.match(/[^\s]/g)) {
-      const newTask = {
+      let newTask = {
         id: String(Math.random()).slice(2, 8),
         text: text.trim(),
         done: false,
+        paused: true,
         date: new Date(),
+        time,
       };
+
+      if (time === 0) {
+        newTask = { ...newTask, reversed: false };
+      } else {
+        newTask = { ...newTask, reversed: true };
+      }
 
       this.setState(({ toDoList }) => {
         const newToDoList = [...toDoList, newTask];
@@ -28,11 +36,43 @@ export default class App extends Component {
     }
   };
 
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      this.setState(({ toDoList }) => {
+        const newList = toDoList.map((task) => {
+          const taskItem = task;
+
+          if (!taskItem.paused && !taskItem.reversed) {
+            taskItem.time += 0.5;
+          }
+          if (!taskItem.paused && taskItem.reversed) {
+            taskItem.time -= 0.5;
+          }
+          if (taskItem.time <= 0) {
+            taskItem.time = 0;
+          }
+          return taskItem;
+        });
+        return {
+          toDoList: newList,
+        };
+      });
+    }, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
   completeTask = (id) => {
     this.setState(({ toDoList }) => {
       const index = toDoList.findIndex((task) => task.id === id);
       const oldTask = toDoList[index];
-      const newTask = { ...oldTask, done: !oldTask.done };
+      const newTask = {
+        ...oldTask,
+        done: !oldTask.done,
+        paused: true,
+      };
       const newList = toDoList.with(index, newTask);
 
       return {
@@ -41,25 +81,11 @@ export default class App extends Component {
     });
   };
 
-  editTask = (id, text) => {
-    if (text.match(/[^\s]/g)) {
-      this.setState(({ toDoList }) => {
-        const index = toDoList.findIndex((task) => task.id === id);
-        const oldTask = toDoList[index];
-        const newTask = { ...oldTask, text };
-        const newList = toDoList.with(index, newTask);
-
-        return {
-          toDoList: newList,
-        };
-      });
-    }
-  };
-
   deleteTask = (id) => {
     this.setState(({ toDoList }) => {
+      const newList = toDoList.filter((task) => task.id !== id);
       return {
-        toDoList: toDoList.filter((task) => task.id !== id),
+        toDoList: newList,
       };
     });
   };
@@ -68,6 +94,33 @@ export default class App extends Component {
     this.setState(({ toDoList }) => {
       return {
         toDoList: toDoList.filter((task) => !task.done),
+      };
+    });
+  };
+
+  startTimer = (id) => {
+    this.handleTask(id, 'paused', false);
+  };
+
+  stopTimer = (id) => {
+    this.handleTask(id, 'paused', true);
+  };
+
+  editTask = (id, text) => {
+    if (text.match(/[^\s]/g)) {
+      this.handleTask(id, 'text', text);
+    }
+  };
+
+  handleTask = (id, prop, value) => {
+    this.setState(({ toDoList }) => {
+      const index = toDoList.findIndex((task) => task.id === id);
+      const oldTask = toDoList[index];
+      const newTask = { ...oldTask, [prop]: value };
+      const newList = toDoList.with(index, newTask);
+
+      return {
+        toDoList: newList,
       };
     });
   };
@@ -105,6 +158,8 @@ export default class App extends Component {
             completeTask={this.completeTask}
             editTask={this.editTask}
             deleteTask={this.deleteTask}
+            startTimer={this.startTimer}
+            stopTimer={this.stopTimer}
           />
         </main>
         <footer>

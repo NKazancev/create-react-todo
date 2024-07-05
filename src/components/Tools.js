@@ -29,7 +29,11 @@ export default class Tools extends Component {
 
         <TasksFilter filter={filter} setFilter={setFilter} />
 
-        <button type="button" onClick={() => clearTasks()} className="tools__button button-clear">
+        <button
+          type="button"
+          onClick={() => clearTasks()}
+          className="tools__button tools__button--clear"
+        >
           Clear completed
         </button>
       </div>

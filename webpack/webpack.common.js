@@ -7,27 +7,23 @@ module.exports = {
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, '..', 'build'),
+    assetModuleFilename: 'assets/[name][ext]',
   },
 
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.js', '.jsx', '.json'],
+    modules: [path.resolve(__dirname, '..', 'src'), 'node_modules'],
   },
 
   module: {
     rules: [
       {
-        test: /\.(woff|ttf|eot)$/,
+        test: /\.(woff|ttf|eot|svg)$/,
         type: 'asset/inline',
-        generator: {
-          filename: './fonts/[name][ext]',
-        },
       },
       {
-        test: /\.(jpg|jpeg|png|gif|svg)$/,
+        test: /\.(jpg|jpeg|png|gif)$/,
         type: 'asset/resource',
-        generator: {
-          filename: './assets/[name][ext]',
-        },
       },
       {
         test: /\.js?$/,

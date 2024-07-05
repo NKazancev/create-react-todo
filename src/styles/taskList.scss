@@ -11,17 +11,17 @@
 .task {
   display: flex;
   align-items: center;
-  column-gap: 25px;
+  column-gap: 21px;
 
   &__item {
     flex-grow: 1;
     display: flex;
     align-items: center;
-  }
 
-  &__item.completed .task__label {
-    text-decoration: line-through;
-    color: hsl(0, 0%, 50%);
+    &.completed .task__label {
+      text-decoration: line-through;
+      color: hsl(0, 0%, 50%);
+    }
   }
 
   &__checkbox {
@@ -44,25 +44,11 @@
   }
 
   &__label {
-    max-width: 346px;
     padding-left: 15px;
     color: hsl(0, 0%, 77%);
     font-size: 16px;
     flex-grow: 1;
     cursor: pointer;
-  }
-
-  &__form {
-    flex-grow: 1;
-  }
-
-  &__input {
-    width: 100%;
-    padding: 5px 10px;
-    color: inherit;
-    background-color: hsl(189, 3%, 58%);
-    border-radius: 5px;
-    font-size: 16px;
   }
 
   &__date {
@@ -74,5 +60,18 @@
   &__button {
     background: transparent;
     flex-shrink: 0;
+  }
+
+  &__form {
+    flex-grow: 1;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0 10px;
+    color: inherit;
+    background-color: hsl(189, 3%, 58%);
+    border-radius: 5px;
+    font-size: 16px;
   }
 }

@@ -8,25 +8,26 @@
     font-size: 14px;
     font-weight: 300;
     line-height: 1.4;
+
     display: block;
   }
 
   &__filters {
     display: flex;
-    column-gap: 9px;
+    column-gap: 12px;
   }
 
   &__button {
-    padding: 13px 23px;
+    padding: 13px 25px;
     border-radius: 5px;
     white-space: nowrap;
-  }
-}
 
-.button-clear {
-  background-color: hsl(190, 50%, 50%);
+    &--clear {
+      background-color: hsl(190, 50%, 50%);
 
-  &:hover {
-    background-color: hsl(190, 63%, 56%);
+      &:hover {
+        background-color: hsl(190, 63%, 56%);
+      }
+    }
   }
 }

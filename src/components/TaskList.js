@@ -10,12 +10,15 @@ export default class TaskList extends Component {
         id: PropTypes.string,
         text: PropTypes.string,
         done: PropTypes.bool,
+        time: PropTypes.number,
         date: PropTypes.instanceOf(Date),
       })
     ),
     editTask: PropTypes.func,
     completeTask: PropTypes.func,
     deleteTask: PropTypes.func,
+    startTimer: PropTypes.func,
+    stopTimer: PropTypes.func,
   };
 
   static defaultProps = {
@@ -23,10 +26,12 @@ export default class TaskList extends Component {
     editTask: () => {},
     completeTask: () => {},
     deleteTask: () => {},
+    startTimer: () => {},
+    stopTimer: () => {},
   };
 
   render() {
-    const { tasks, editTask, completeTask, deleteTask } = this.props;
+    const { tasks, editTask, completeTask, deleteTask, startTimer, stopTimer } = this.props;
 
     let className = 'list-container';
     if (!tasks.length) className += ' no-padding';
@@ -39,9 +44,12 @@ export default class TaskList extends Component {
           text={task.text}
           done={task.done}
           date={task.date}
+          time={task.time}
           onEdit={editTask}
           onComplete={() => completeTask(task.id)}
           onDelete={() => deleteTask(task.id)}
+          startTimer={() => startTimer(task.id)}
+          stopTimer={() => stopTimer(task.id)}
         />
       );
     });

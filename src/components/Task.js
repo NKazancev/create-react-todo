@@ -5,15 +5,20 @@ import PropTypes from 'prop-types';
 import pen from '../assets/pen.svg';
 import trash from '../assets/trash.svg';
 
+import TaskTimer from './TaskTimer';
+
 export default class Task extends Component {
   static propTypes = {
     id: PropTypes.string,
     text: PropTypes.string,
     done: PropTypes.bool,
     date: PropTypes.instanceOf(Date),
+    time: PropTypes.number,
     onComplete: PropTypes.func,
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
+    stopTimer: PropTypes.func,
+    startTimer: PropTypes.func,
   };
 
   static defaultProps = {
@@ -21,9 +26,12 @@ export default class Task extends Component {
     text: '',
     done: false,
     date: new Date(),
+    time: 0,
     onComplete: () => {},
     onEdit: () => {},
     onDelete: () => {},
+    stopTimer: () => {},
+    startTimer: () => {},
   };
 
   state = {
@@ -68,7 +76,7 @@ export default class Task extends Component {
   };
 
   render() {
-    const { id, done, text, date, onDelete } = this.props;
+    const { id, done, text, date, time, onDelete, startTimer, stopTimer } = this.props;
     const { edit, text: stateText } = this.state;
 
     let taskItem = 'task__item';
@@ -95,17 +103,19 @@ export default class Task extends Component {
             checked={done}
             onChange={this.completeTask}
           />
-
           <label htmlFor={id} className="task__label">
             {text}
           </label>
         </div>
-        <span className="task__date">
+
+        <div className="task__date">
           {`created ${formatDistanceToNow(date, {
             includeSeconds: true,
             addSuffix: true,
           })}`}
-        </span>
+        </div>
+
+        <TaskTimer time={time} startTimer={startTimer} stopTimer={stopTimer} />
 
         <button type="button" onClick={this.editTask} className="task__button">
           <img src={pen} alt="pen-icon" />

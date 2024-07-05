@@ -15,14 +15,30 @@
     border-bottom-left-radius: 5px;
   }
 
+  &__timer {
+    display: flex;
+    column-gap: 10px;
+  }
+
   &__input {
     padding: 0 15px;
     background-color: hsl(189, 3%, 58%);
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
     font-size: 16px;
 
-    flex-grow: 1;
+    &--text {
+      flex-grow: 1;
+    }
+
+    &--min,
+    &--sec {
+      width: 65px;
+      text-align: center;
+    }
+
+    &--sec {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
 
     &::placeholder {
       color: hsl(0, 0%, 78%);
