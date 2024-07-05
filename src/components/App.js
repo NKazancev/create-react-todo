@@ -43,10 +43,10 @@ export default class App extends Component {
           const taskItem = task;
 
           if (!taskItem.paused && !taskItem.reversed) {
-            taskItem.time += 0.5;
+            taskItem.time += 1;
           }
           if (!taskItem.paused && taskItem.reversed) {
-            taskItem.time -= 0.5;
+            taskItem.time -= 1;
           }
           if (taskItem.time <= 0) {
             taskItem.time = 0;
