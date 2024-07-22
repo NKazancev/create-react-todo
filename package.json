@@ -4,7 +4,7 @@
   "main": "index.js",
   "author": "Nikolai Kazancev",
   "license": "ISC",
-  "homepage": "https://NKazancev.github.io/react-todo-classes",
+  "homepage": "https://NKazancev.github.io/react-todo",
   "scripts": {
     "serve": "webpack serve --config webpack/webpack.dev.js",
     "build": "webpack --config webpack/webpack.prod.js",

@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 
@@ -7,124 +7,110 @@ import trash from '../assets/trash.svg';
 
 import TaskTimer from './TaskTimer';
 
-export default class Task extends Component {
-  static propTypes = {
-    id: PropTypes.string,
-    text: PropTypes.string,
-    done: PropTypes.bool,
-    date: PropTypes.instanceOf(Date),
-    time: PropTypes.number,
-    onComplete: PropTypes.func,
-    onEdit: PropTypes.func,
-    onDelete: PropTypes.func,
-    stopTimer: PropTypes.func,
-    startTimer: PropTypes.func,
-  };
+export default function Task(props) {
+  const {
+    id,
+    done,
+    text,
+    date,
+    time,
+    onComplete,
+    onEdit,
+    onDelete,
+    startTimer,
+    stopTimer,
+  } = props;
 
-  static defaultProps = {
-    id: '',
-    text: '',
-    done: false,
-    date: new Date(),
-    time: 0,
-    onComplete: () => {},
-    onEdit: () => {},
-    onDelete: () => {},
-    stopTimer: () => {},
-    startTimer: () => {},
-  };
+  const [stateText, setText] = useState('');
+  const [edit, setEdit] = useState(false);
 
-  state = {
-    text: '',
-    done: false,
-    edit: false,
-  };
+  let taskClass = 'task__item';
+  if (done) taskClass += ' completed';
 
-  completeTask = () => {
-    const { onComplete } = this.props;
-    onComplete();
-    this.setState((state) => ({ done: !state.done }));
-  };
-
-  editTask = () => {
-    const { done, text: propsText } = this.props;
+  const editTask = () => {
     if (!done) {
-      this.setState((state) => {
-        return {
-          edit: !state.edit,
-          text: propsText,
-        };
-      });
+      setText(text);
+      setEdit((s) => !s);
     }
   };
 
-  changeTask = (event) => {
-    this.setState({ text: event.target.value });
-  };
-
-  handleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    const { id, onEdit } = this.props;
-    const { text } = this.state;
-    onEdit(id, text);
-    this.setState((state) => {
-      return {
-        edit: !state.edit,
-        text: '',
-      };
-    });
+    onEdit(id, stateText);
+    setText('');
+    setEdit((s) => !s);
   };
 
-  render() {
-    const { id, done, text, date, time, onDelete, startTimer, stopTimer } = this.props;
-    const { edit, text: stateText } = this.state;
+  const editForm = (
+    <form onSubmit={handleSubmit} className="task__form">
+      <input
+        type="text"
+        className="task__input"
+        onChange={(e) => setText(e.target.value)}
+        value={stateText}
+      />
+    </form>
+  );
 
-    let taskItem = 'task__item';
-    if (done) taskItem += ' completed';
+  return (
+    <li className="task">
+      {edit && editForm}
 
-    return (
-      <li className="task">
-        {edit && (
-          <form onSubmit={this.handleSubmit} className="task__form">
-            <input
-              type="text"
-              className="task__input"
-              onChange={this.changeTask}
-              value={stateText}
-            />
-          </form>
-        )}
+      <div className={!edit ? taskClass : 'hidden'}>
+        <input
+          type="checkbox"
+          id={id}
+          className="task__checkbox"
+          checked={done}
+          onChange={onComplete}
+        />
+        <label htmlFor={id} className="task__label">
+          {text}
+        </label>
+      </div>
 
-        <div className={!edit ? taskItem : 'hidden'}>
-          <input
-            type="checkbox"
-            id={id}
-            className="task__checkbox"
-            checked={done}
-            onChange={this.completeTask}
-          />
-          <label htmlFor={id} className="task__label">
-            {text}
-          </label>
-        </div>
+      <div className="task__date">
+        {`created ${formatDistanceToNow(date, {
+          includeSeconds: true,
+          addSuffix: true,
+        })}`}
+      </div>
 
-        <div className="task__date">
-          {`created ${formatDistanceToNow(date, {
-            includeSeconds: true,
-            addSuffix: true,
-          })}`}
-        </div>
+      <TaskTimer time={time} startTimer={startTimer} stopTimer={stopTimer} />
 
-        <TaskTimer time={time} startTimer={startTimer} stopTimer={stopTimer} />
+      <button type="button" className="task__button" onClick={editTask}>
+        <img src={pen} alt="pen-icon" />
+      </button>
 
-        <button type="button" onClick={this.editTask} className="task__button">
-          <img src={pen} alt="pen-icon" />
-        </button>
-
-        <button type="button" onClick={onDelete} className="task__button">
-          <img src={trash} alt="trash-icon" />
-        </button>
-      </li>
-    );
-  }
+      <button type="button" className="task__button" onClick={onDelete}>
+        <img src={trash} alt="trash-icon" />
+      </button>
+    </li>
+  );
 }
+
+Task.propTypes = {
+  id: PropTypes.string,
+  text: PropTypes.string,
+  done: PropTypes.bool,
+  date: PropTypes.instanceOf(Date),
+  time: PropTypes.number,
+  onComplete: PropTypes.func,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
+  stopTimer: PropTypes.func,
+  startTimer: PropTypes.func,
+};
+
+Task.defaultProps = {
+  id: '',
+  text: '',
+  done: false,
+  date: new Date(),
+  time: 0,
+  onComplete: () => {},
+  onEdit: () => {},
+  onDelete: () => {},
+  stopTimer: () => {},
+  startTimer: () => {},
+};

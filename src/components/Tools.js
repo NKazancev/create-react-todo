@@ -1,42 +1,39 @@
-import { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import TasksFilter from './TasksFilter';
+import TaskFilter from './TaskFilter';
 
-export default class Tools extends Component {
-  static propTypes = {
-    total: PropTypes.number,
-    filter: PropTypes.string,
-    setFilter: PropTypes.func,
-    clearTasks: PropTypes.func,
-  };
+export default function Tools(props) {
+  const { total, filter, setFilter, clearTasks } = props;
 
-  static defaultProps = {
-    total: 0,
-    filter: 'all',
-    setFilter: () => {},
-    clearTasks: () => {},
-  };
+  return (
+    <div className="tools">
+      <span className="tools__stat">
+        Uncompleted <br /> tasks: {total}
+      </span>
 
-  render() {
-    const { total, filter, setFilter, clearTasks } = this.props;
+      <TaskFilter setFilter={setFilter} filter={filter} />
 
-    return (
-      <div className="tools">
-        <span className="tools__stat">
-          Uncompleted <br /> tasks: {total}
-        </span>
-
-        <TasksFilter filter={filter} setFilter={setFilter} />
-
-        <button
-          type="button"
-          onClick={() => clearTasks()}
-          className="tools__button tools__button--clear"
-        >
-          Clear completed
-        </button>
-      </div>
-    );
-  }
+      <button
+        type="button"
+        className="tools__button tools__button--clear"
+        onClick={clearTasks}
+      >
+        Clear completed
+      </button>
+    </div>
+  );
 }
+
+Tools.propTypes = {
+  total: PropTypes.number,
+  filter: PropTypes.string,
+  setFilter: PropTypes.func,
+  clearTasks: PropTypes.func,
+};
+
+Tools.defaultProps = {
+  total: 0,
+  filter: 'all',
+  setFilter: () => {},
+  clearTasks: () => {},
+};

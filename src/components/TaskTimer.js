@@ -1,46 +1,44 @@
-import { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import play from '../assets/play.svg';
-import pause from '../assets/pause.svg';
+import playIcon from '../assets/play.svg';
+import pauseIcon from '../assets/pause.svg';
 
-export default class TaskTimer extends Component {
-  static propTypes = {
-    time: PropTypes.number,
-    stopTimer: PropTypes.func,
-    startTimer: PropTypes.func,
-  };
+export default function TaskTimer(props) {
+  const { time, startTimer, stopTimer } = props;
 
-  static defaultProps = {
-    time: 0,
-    stopTimer: () => {},
-    startTimer: () => {},
-  };
+  const seconds = (time % 60).toString().padStart(2, 0);
+  const minutes = Math.floor(time / 60)
+    .toString()
+    .padStart(2, 0);
 
-  render() {
-    const { time, startTimer, stopTimer } = this.props;
-
-    return (
-      <div className="timer">
-        <div className="timer__buttons">
-          <button className="timer__start" type="button" onClick={startTimer}>
-            <img src={play} alt="play-icon" />
-          </button>
-          <button className="timer__stop" type="button" onClick={stopTimer}>
-            <img src={pause} alt="pause-icon" />
-          </button>
-        </div>
-
-        <div className="timer__display">
-          <span>
-            {Math.floor(time / 60)
-              .toString()
-              .padStart(2, 0)}
-          </span>
-          <span>:</span>
-          <span>{(time % 60).toString().padStart(2, 0)}</span>
-        </div>
+  return (
+    <div className="timer">
+      <div className="timer__buttons">
+        <button className="timer__start" type="button" onClick={startTimer}>
+          <img src={playIcon} alt="play-icon" />
+        </button>
+        <button className="timer__stop" type="button" onClick={stopTimer}>
+          <img src={pauseIcon} alt="pause-icon" />
+        </button>
       </div>
-    );
-  }
+
+      <div className="timer__display">
+        <span>{minutes}</span>
+        <span>:</span>
+        <span>{seconds}</span>
+      </div>
+    </div>
+  );
 }
+
+TaskTimer.propTypes = {
+  time: PropTypes.number,
+  stopTimer: PropTypes.func,
+  startTimer: PropTypes.func,
+};
+
+TaskTimer.defaultProps = {
+  time: 0,
+  stopTimer: () => {},
+  startTimer: () => {},
+};

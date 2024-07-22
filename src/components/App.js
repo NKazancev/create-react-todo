@@ -1,45 +1,38 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 
 import NewTaskForm from './NewTaskForm';
 import TaskList from './TaskList';
 import Tools from './Tools';
 
-export default class App extends Component {
-  state = {
-    toDoList: [],
-    filter: 'all',
-  };
+export default function App() {
+  const [toDoList, setToDoList] = useState([]);
+  const [filter, setFilter] = useState('all');
 
-  addTask = (text, time) => {
+  const addTask = (text, time) => {
     if (text.match(/[^\s]/g)) {
-      let newTask = {
+      let task = {
         id: String(Math.random()).slice(2, 8),
         text: text.trim(),
         done: false,
-        paused: true,
         date: new Date(),
+        paused: true,
+        reversed: undefined,
         time,
       };
 
       if (time === 0) {
-        newTask = { ...newTask, reversed: false };
+        task = { ...task, reversed: false };
       } else {
-        newTask = { ...newTask, reversed: true };
+        task = { ...task, reversed: true };
       }
-
-      this.setState(({ toDoList }) => {
-        const newToDoList = [...toDoList, newTask];
-        return {
-          toDoList: newToDoList,
-        };
-      });
+      setToDoList([...toDoList, task]);
     }
   };
 
-  componentDidMount() {
-    this.timer = setInterval(() => {
-      this.setState(({ toDoList }) => {
-        const newList = toDoList.map((task) => {
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setToDoList(
+        toDoList.map((task) => {
           const taskItem = task;
 
           if (!taskItem.paused && !taskItem.reversed) {
@@ -52,84 +45,56 @@ export default class App extends Component {
             taskItem.time = 0;
           }
           return taskItem;
-        });
-        return {
-          toDoList: newList,
-        };
-      });
+        })
+      );
     }, 1000);
+    return () => clearInterval(timer);
+  });
+
+  const completeTask = (id) => {
+    const index = toDoList.findIndex((task) => task.id === id);
+    const oldTask = toDoList[index];
+    const newTask = {
+      ...oldTask,
+      done: !oldTask.done,
+      paused: true,
+    };
+    setToDoList(toDoList.with(index, newTask));
+  };
+
+  const deleteTask = (id) => {
+    const newList = toDoList.filter((task) => task.id !== id);
+    setToDoList(newList);
+  };
+
+  const startTimer = (id) => {
+    const index = toDoList.findIndex((task) => task.id === id);
+    const oldTask = toDoList[index];
+    if (!oldTask.paused) return;
+    const newTask = { ...oldTask, paused: false };
+    setToDoList(toDoList.with(index, newTask));
+  };
+
+  function handleTask(id, prop, value) {
+    const index = toDoList.findIndex((task) => task.id === id);
+    const oldTask = toDoList[index];
+    const newTask = { ...oldTask, [prop]: value };
+    setToDoList(toDoList.with(index, newTask));
   }
 
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-
-  completeTask = (id) => {
-    this.setState(({ toDoList }) => {
-      const index = toDoList.findIndex((task) => task.id === id);
-      const oldTask = toDoList[index];
-      const newTask = {
-        ...oldTask,
-        done: !oldTask.done,
-        paused: true,
-      };
-      const newList = toDoList.with(index, newTask);
-
-      return {
-        toDoList: newList,
-      };
-    });
+  const stopTimer = (id) => {
+    handleTask(id, 'paused', true);
   };
 
-  deleteTask = (id) => {
-    this.setState(({ toDoList }) => {
-      const newList = toDoList.filter((task) => task.id !== id);
-      return {
-        toDoList: newList,
-      };
-    });
-  };
-
-  clearTasks = () => {
-    this.setState(({ toDoList }) => {
-      return {
-        toDoList: toDoList.filter((task) => !task.done),
-      };
-    });
-  };
-
-  startTimer = (id) => {
-    this.handleTask(id, 'paused', false);
-  };
-
-  stopTimer = (id) => {
-    this.handleTask(id, 'paused', true);
-  };
-
-  editTask = (id, text) => {
+  const editTask = (id, text) => {
     if (text.match(/[^\s]/g)) {
-      this.handleTask(id, 'text', text);
+      handleTask(id, 'text', text);
     }
   };
 
-  handleTask = (id, prop, value) => {
-    this.setState(({ toDoList }) => {
-      const index = toDoList.findIndex((task) => task.id === id);
-      const oldTask = toDoList[index];
-      const newTask = { ...oldTask, [prop]: value };
-      const newList = toDoList.with(index, newTask);
-
-      return {
-        toDoList: newList,
-      };
-    });
-  };
-
-  setFilter = (filter) => this.setState({ filter });
-
-  static filterTasks(items, filter) {
+  function filterTasks(items, itemsFilter) {
     return items.filter((task) => {
-      switch (filter) {
+      switch (itemsFilter) {
         case 'completed':
           return task.done;
         case 'active':
@@ -140,37 +105,33 @@ export default class App extends Component {
     });
   }
 
-  render() {
-    const { toDoList, filter } = this.state;
-    const tasks = App.filterTasks(toDoList, filter);
-    const completedTasks = toDoList.filter((task) => task.done).length;
-    const uncompletedTasks = toDoList.length - completedTasks;
+  const tasks = filterTasks(toDoList, filter);
+  const uncompletedTasks = filterTasks(toDoList, 'active').length;
 
-    return (
-      <div className="app">
-        <header>
-          <h1 className="title">ToDo List</h1>
-          <NewTaskForm addTask={this.addTask} />
-        </header>
-        <main>
-          <TaskList
-            tasks={tasks}
-            completeTask={this.completeTask}
-            editTask={this.editTask}
-            deleteTask={this.deleteTask}
-            startTimer={this.startTimer}
-            stopTimer={this.stopTimer}
-          />
-        </main>
-        <footer>
-          <Tools
-            setFilter={this.setFilter}
-            clearTasks={this.clearTasks}
-            total={uncompletedTasks}
-            filter={filter}
-          />
-        </footer>
-      </div>
-    );
-  }
+  return (
+    <div className="app">
+      <header>
+        <h1 className="title">ToDo List</h1>
+        <NewTaskForm addTask={addTask} />
+      </header>
+      <main>
+        <TaskList
+          tasks={tasks}
+          completeTask={completeTask}
+          editTask={editTask}
+          deleteTask={deleteTask}
+          startTimer={startTimer}
+          stopTimer={stopTimer}
+        />
+      </main>
+      <footer>
+        <Tools
+          setFilter={(itemsFilter) => setFilter(itemsFilter)}
+          clearTasks={() => setToDoList(toDoList.filter((task) => !task.done))}
+          total={uncompletedTasks}
+          filter={filter}
+        />
+      </footer>
+    </div>
+  );
 }
