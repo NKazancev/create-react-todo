@@ -49,7 +49,7 @@ export default function App() {
       );
     }, 1000);
     return () => clearInterval(timer);
-  });
+  }, [toDoList]);
 
   const completeTask = (id) => {
     const index = toDoList.findIndex((task) => task.id === id);
