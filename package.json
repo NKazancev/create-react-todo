@@ -4,15 +4,13 @@
   "main": "index.js",
   "author": "Nikolai Kazancev",
   "license": "ISC",
-  "homepage": "https://NKazancev.github.io/react-todo",
   "scripts": {
     "serve": "webpack serve --config webpack/webpack.dev.js",
     "build": "webpack --config webpack/webpack.prod.js",
     "lint": "eslint ./src/**/*.js",
     "fix": "eslint --fix ./src/**/*.js",
     "format": "prettier --write ./src/**/*.js",
-    "prepare": "husky",
-    "deploy": "gh-pages -d build"
+    "prepare": "husky"
   },
   "lint-staged": {
     "src/**/*.js": [
@@ -43,7 +41,6 @@
     "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-react": "^7.34.2",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "gh-pages": "^6.1.1",
     "html-webpack-plugin": "^5.6.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
