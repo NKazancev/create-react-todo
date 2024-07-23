@@ -24,8 +24,8 @@ module.exports = {
     'plugin:prettier/recommended',
   ],
   rules: {
-    'indent': ['error', 2, { SwitchCase: 1 }],
-    'quotes': ['error', 'single'],
+    indent: ['error', 2, { SwitchCase: 1 }],
+    quotes: ['error', 'single'],
     'prettier/prettier': 'error',
     'linebreak-style': [0, 'unix'],
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
@@ -33,23 +33,19 @@ module.exports = {
     'react/sort-comp': [
       2,
       {
-        'order': [
-          'type-annotations',
-          'everything-else',
-          'render'
-        ]
-      }
+        order: ['type-annotations', 'everything-else', 'render'],
+      },
     ],
     'import/order': [
       2,
       {
         groups: [
-          'builtin', 
-          'external', 
-          'internal', 
-          'parent', 
-          'sibling', 
-          'index'
+          'builtin',
+          'external',
+          'internal',
+          'parent',
+          'sibling',
+          'index',
         ],
         'newlines-between': 'always',
       },
@@ -58,6 +54,7 @@ module.exports = {
     'react/prefer-stateless-function': 'off',
     'react/state-in-constructor': 'off',
     'react/static-property-placement': 'off',
+    'no-use-before-define': 'off',
   },
   ignorePatterns: ['node_modules', 'build'],
 };

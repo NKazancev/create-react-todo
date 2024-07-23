@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import NewTaskForm from './NewTaskForm';
 import TaskList from './TaskList';
@@ -29,28 +29,6 @@ export default function App() {
     }
   };
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setToDoList(
-        toDoList.map((task) => {
-          const taskItem = task;
-
-          if (!taskItem.paused && !taskItem.reversed) {
-            taskItem.time += 1;
-          }
-          if (!taskItem.paused && taskItem.reversed) {
-            taskItem.time -= 1;
-          }
-          if (taskItem.time <= 0) {
-            taskItem.time = 0;
-          }
-          return taskItem;
-        })
-      );
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [toDoList]);
-
   const completeTask = (id) => {
     const index = toDoList.findIndex((task) => task.id === id);
     const oldTask = toDoList[index];
@@ -59,7 +37,17 @@ export default function App() {
       done: !oldTask.done,
       paused: true,
     };
+    stopTimer(id);
     setToDoList(toDoList.with(index, newTask));
+  };
+
+  const editTask = (id, text) => {
+    if (text.match(/[^\s]/g)) {
+      const index = toDoList.findIndex((task) => task.id === id);
+      const oldTask = toDoList[index];
+      const newTask = { ...oldTask, text };
+      setToDoList(toDoList.with(index, newTask));
+    }
   };
 
   const deleteTask = (id) => {
@@ -68,29 +56,48 @@ export default function App() {
   };
 
   const startTimer = (id) => {
-    const index = toDoList.findIndex((task) => task.id === id);
-    const oldTask = toDoList[index];
-    if (!oldTask.paused) return;
-    const newTask = { ...oldTask, paused: false };
-    setToDoList(toDoList.with(index, newTask));
-  };
+    const { paused } = toDoList.find((task) => task.id === id);
+    if (paused) {
+      const timer = setInterval(() => {
+        setToDoList((prevToDoList) => {
+          return prevToDoList.map((task) => {
+            const newTask = task;
+            if (newTask.id === id) {
+              if (!task.paused && !newTask.reversed) {
+                newTask.time += 1;
+              }
+              if (!newTask.paused && newTask.reversed) {
+                newTask.time -= 1;
+              }
+              if (newTask.time <= 0) {
+                newTask.time = 0;
+                stopTimer(id);
+              }
+            }
+            return newTask;
+          });
+        });
+      }, 1000);
 
-  function handleTask(id, prop, value) {
-    const index = toDoList.findIndex((task) => task.id === id);
-    const oldTask = toDoList[index];
-    const newTask = { ...oldTask, [prop]: value };
-    setToDoList(toDoList.with(index, newTask));
-  }
-
-  const stopTimer = (id) => {
-    handleTask(id, 'paused', true);
-  };
-
-  const editTask = (id, text) => {
-    if (text.match(/[^\s]/g)) {
-      handleTask(id, 'text', text);
+      const index = toDoList.findIndex((task) => task.id === id);
+      const oldTask = toDoList[index];
+      const newTask = { ...oldTask, paused: false, timer };
+      setToDoList(toDoList.with(index, newTask));
     }
   };
+
+  const stopTimer = (id) => {
+    const { paused } = toDoList.find((task) => task.id === id);
+    if (!paused) {
+      const index = toDoList.findIndex((task) => task.id === id);
+      const oldTask = toDoList[index];
+      clearInterval(oldTask.timer);
+      const newTask = { ...oldTask, paused: true };
+      setToDoList(toDoList.with(index, newTask));
+    }
+  };
+
+  const clearTasks = () => setToDoList(toDoList.filter((task) => !task.done));
 
   function filterTasks(items, itemsFilter) {
     return items.filter((task) => {
@@ -127,7 +134,7 @@ export default function App() {
       <footer>
         <Tools
           setFilter={(itemsFilter) => setFilter(itemsFilter)}
-          clearTasks={() => setToDoList(toDoList.filter((task) => !task.done))}
+          clearTasks={clearTasks}
           total={uncompletedTasks}
           filter={filter}
         />
