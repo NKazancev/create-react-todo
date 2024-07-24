@@ -7,20 +7,18 @@ import trash from '../assets/trash.svg';
 
 import TaskTimer from './TaskTimer';
 
-export default function Task(props) {
-  const {
-    id,
-    done,
-    text,
-    date,
-    time,
-    onComplete,
-    onEdit,
-    onDelete,
-    startTimer,
-    stopTimer,
-  } = props;
-
+export default function Task({
+  id = '',
+  done = false,
+  text = '',
+  date = '',
+  time = 0,
+  onComplete = () => {},
+  onEdit = () => {},
+  onDelete = () => {},
+  startTimer = () => {},
+  stopTimer = () => {},
+}) {
   const [stateText, setText] = useState('');
   const [edit, setEdit] = useState(false);
 
@@ -41,20 +39,18 @@ export default function Task(props) {
     setEdit((s) => !s);
   };
 
-  const editForm = (
-    <form onSubmit={handleSubmit} className="task__form">
-      <input
-        type="text"
-        className="task__input"
-        onChange={(e) => setText(e.target.value)}
-        value={stateText}
-      />
-    </form>
-  );
-
   return (
     <li className="task">
-      {edit && editForm}
+      {edit && (
+        <form onSubmit={handleSubmit} className="task__form">
+          <input
+            type="text"
+            className="task__input"
+            onChange={(e) => setText(e.target.value)}
+            value={stateText}
+          />
+        </form>
+      )}
 
       <div className={!edit ? taskClass : 'hidden'}>
         <input
@@ -100,17 +96,4 @@ Task.propTypes = {
   onDelete: PropTypes.func,
   stopTimer: PropTypes.func,
   startTimer: PropTypes.func,
-};
-
-Task.defaultProps = {
-  id: '',
-  text: '',
-  done: false,
-  date: new Date(),
-  time: 0,
-  onComplete: () => {},
-  onEdit: () => {},
-  onDelete: () => {},
-  stopTimer: () => {},
-  startTimer: () => {},
 };

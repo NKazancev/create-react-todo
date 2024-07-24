@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 
-export default function TasksFilter(props) {
-  const { filter, setFilter } = props;
-
+export default function Filters({ filter = 'all', setFilter = () => {} }) {
   const btn = 'tools__button';
   const selectedBtn = 'tools__button selected';
 
@@ -38,12 +36,7 @@ export default function TasksFilter(props) {
   );
 }
 
-TasksFilter.propTypes = {
+Filters.propTypes = {
   filter: PropTypes.string,
   setFilter: PropTypes.func,
-};
-
-TasksFilter.defaultProps = {
-  filter: 'all',
-  setFilter: () => {},
 };

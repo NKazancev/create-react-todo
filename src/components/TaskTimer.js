@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import playIcon from '../assets/play.svg';
 import pauseIcon from '../assets/pause.svg';
 
-export default function TaskTimer(props) {
-  const { time, startTimer, stopTimer } = props;
-
+export default function TaskTimer({
+  time = 0,
+  startTimer = () => {},
+  stopTimer = () => {},
+}) {
   const seconds = (time % 60).toString().padStart(2, 0);
   const minutes = Math.floor(time / 60)
     .toString()
@@ -35,10 +37,4 @@ TaskTimer.propTypes = {
   time: PropTypes.number,
   stopTimer: PropTypes.func,
   startTimer: PropTypes.func,
-};
-
-TaskTimer.defaultProps = {
-  time: 0,
-  stopTimer: () => {},
-  startTimer: () => {},
 };

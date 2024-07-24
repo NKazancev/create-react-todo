@@ -1,17 +1,20 @@
 import PropTypes from 'prop-types';
 
-import TaskFilter from './TaskFilter';
+import Filters from './Filters';
 
-export default function Tools(props) {
-  const { total, filter, setFilter, clearTasks } = props;
-
+export default function Tools({
+  total = 0,
+  filter = 'all',
+  setFilter = () => {},
+  clearTasks = () => {},
+}) {
   return (
     <div className="tools">
       <span className="tools__stat">
         Uncompleted <br /> tasks: {total}
       </span>
 
-      <TaskFilter setFilter={setFilter} filter={filter} />
+      <Filters setFilter={setFilter} filter={filter} />
 
       <button
         type="button"
@@ -29,11 +32,4 @@ Tools.propTypes = {
   filter: PropTypes.string,
   setFilter: PropTypes.func,
   clearTasks: PropTypes.func,
-};
-
-Tools.defaultProps = {
-  total: 0,
-  filter: 'all',
-  setFilter: () => {},
-  clearTasks: () => {},
 };

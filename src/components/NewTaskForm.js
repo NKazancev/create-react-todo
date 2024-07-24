@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
-export default function NewTaskForm(props) {
-  const { addTask } = props;
-
+export default function NewTaskForm({ addTask = () => {} }) {
   const [text, setText] = useState('');
   const [minutes, setMinutes] = useState('');
   const [seconds, setSeconds] = useState('');
@@ -53,8 +51,4 @@ export default function NewTaskForm(props) {
 
 NewTaskForm.propTypes = {
   addTask: PropTypes.func,
-};
-
-NewTaskForm.defaultProps = {
-  addTask: () => {},
 };

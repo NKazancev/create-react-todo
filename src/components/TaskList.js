@@ -2,10 +2,14 @@ import PropTypes from 'prop-types';
 
 import Task from './Task';
 
-export default function TaskList(props) {
-  const { tasks, completeTask, deleteTask, editTask, startTimer, stopTimer } =
-    props;
-
+export default function TaskList({
+  tasks = [],
+  completeTask = () => {},
+  deleteTask = () => {},
+  editTask = () => {},
+  startTimer = () => {},
+  stopTimer = () => {},
+}) {
   const todos = tasks.map((task) => {
     return (
       <Task
@@ -50,13 +54,4 @@ TaskList.propTypes = {
   deleteTask: PropTypes.func,
   startTimer: PropTypes.func,
   stopTimer: PropTypes.func,
-};
-
-TaskList.defaultProps = {
-  tasks: [],
-  editTask: () => {},
-  completeTask: () => {},
-  deleteTask: () => {},
-  startTimer: () => {},
-  stopTimer: () => {},
 };
